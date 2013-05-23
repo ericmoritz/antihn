@@ -1,0 +1,21 @@
+% -*- erlang -*-
+{application, antihn,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib,
+		  cowboy
+                 ]},
+  {mod, { antihn_app, []}},
+  {env, [
+	 {redirects, 
+	  {
+	   "http://research.microsoft.com/en-us/um/people/lamport/pubs/pubs.html",
+	   "http://www.cs.utexas.edu/~EWD/"
+	  }
+	 }
+  ]}
+ ]}.
