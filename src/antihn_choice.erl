@@ -20,7 +20,7 @@
 -define(SERVER, ?MODULE). 
 
 -record(state, {
-	  seed=random:seed(),
+	  n=1,
 	  redirects=redirects()
 	 }).
 
@@ -80,12 +80,12 @@ pick() ->
 %% @end
 %%--------------------------------------------------------------------
 handle_call(pick, _From, State) ->
-    {Choice, NewSeed} = random_choice(
+    {Choice, NewN} = choose(
 		       State#state.redirects,
-		       State#state.seed
+		       State#state.n
 		      ),
     Reply = {ok, Choice},
-    NewState = State#state{seed=NewSeed},
+    NewState = State#state{n=NewN},
     {reply, Reply, NewState}.
 
 %%--------------------------------------------------------------------
@@ -148,8 +148,16 @@ redirects() ->
     {ok, Redirects} = application:get_env(antihn, redirects),
     Redirects.
 
-
-random_choice(Choices, Seed) ->
-    {N, NewSeed} = random:uniform_s(size(Choices), Seed),
+choose(Choices, N) ->
     Choice = element(N, Choices),
-    {Choice, NewSeed}.
+    NewN   = cycle(N, size(Choices)),
+    {Choice, NewN}.
+
+cycle(N, Size) when N == Size ->
+    1;
+cycle(N, _) when N < 1 ->
+    1;
+cycle(N, _) ->
+    N+1.
+
+    

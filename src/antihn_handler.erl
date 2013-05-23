@@ -21,7 +21,7 @@ init(_Transport, Req, []) ->
     {ok, Req, undefined}.
 
 handle(Req, State) ->
-    Choice = antihn_choice:pick(),
+    {ok, Choice} = antihn_choice:pick(),
     {ok, Req2} = cowboy_req:reply(
 		   302,
 		   [
