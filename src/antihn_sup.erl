@@ -36,11 +36,12 @@ dispatch() ->
 
 init([Port]) ->
     Dispatch = cowboy_router:compile(dispatch()),
+    ChoiceSpec = ?CHILD(antihn_choice, worker),
     CowboySpec = ranch:child_spec(antihn,
 		   100,
 		   ranch_tcp, [{port, Port}],
 		   cowboy_protocol, [{env, [{dispatch, Dispatch}]}]
 		  ),
 
-    {ok, { {one_for_one, 5, 10}, [CowboySpec]} }.
+    {ok, { {one_for_one, 5, 10}, [ChoiceSpec, CowboySpec]} }.
 

@@ -21,9 +21,7 @@ init(_Transport, Req, []) ->
     {ok, Req, undefined}.
 
 handle(Req, State) ->
-    {ok, Redirects} = redirects(),
-    N = random:uniform(size(Redirects)),
-    Choice = erlang:element(N, Redirects),
+    Choice = antihn_choice:pick(),
     {ok, Req2} = cowboy_req:reply(
 		   302,
 		   [
@@ -37,9 +35,3 @@ handle(Req, State) ->
 terminate(_Reason, _Req, _State) ->
     ok.
 
-%%--------------------------------------------------------------------
-%% Internal
-%%--------------------------------------------------------------------
--spec redirects() -> {ok, tuple()}.
-redirects() ->
-    application:get_env(antihn, redirects).
